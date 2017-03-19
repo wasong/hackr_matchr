@@ -23,7 +23,7 @@ export default class AuthService {
     // Saves the user token
     this.setToken(authResult.idToken)
     // navigate to the home route
-    browserHistory.replace('/auth')
+    browserHistory.replace('/')
   }
 
   login() {
