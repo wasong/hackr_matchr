@@ -183,14 +183,12 @@ const OtherProject = props => (
 class DashBoard extends Component {
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {}
   }
 
   render() {
     return (
       <div className="App">
-        {console.log(this.props)}
         <AppToolbar auth={this.props.auth} />
         <div className="Content Side-space">
           <Subheader>Summary of your Github contributions</Subheader>

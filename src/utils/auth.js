@@ -1,6 +1,7 @@
 import Auth0Lock from 'auth0-lock'
 import { browserHistory } from 'react-router'
 
+import { api } from './fetch'
 import { isTokenExpired } from './jwtHelper'
 import { redirectUrl } from '../../config/auth'
 
@@ -24,6 +25,7 @@ export default class AuthService {
     this.lock.getUserInfo(authResult.accessToken, (err, profile) => {
       localStorage.setItem('profile', JSON.stringify(profile))
     })
+
     // Saves the user token
     this.setToken('id_token', authResult.idToken)
     this.setToken('access_token', authResult.accessToken)
