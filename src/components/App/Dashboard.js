@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
+import { Dialog, Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
@@ -108,7 +108,7 @@ const ProjectList = props => (
       <div className="Featured-row">
         {
           defaultValues.projects.slice(0, 3).map(project => (
-            <FeaturedProject project={project} />
+            <FeaturedProject project={project} onClick={props.onSelect.bind(project)} />
           ))
         }
       </div>
@@ -118,7 +118,7 @@ const ProjectList = props => (
           <Paper zDepth={1} className="Breathing-room">
             {
               defaultValues.projects.slice(3).map(project => (
-                <OtherProject project={project} />
+                <OtherProject project={project} onClick={props.onSelect.bind(project)} />
               ))
             }
           </Paper>
@@ -130,7 +130,10 @@ const ProjectList = props => (
 
 const FeaturedProject = props => (
   <Paper zDepth={1} className="Featured-project Breathing-room">
-    <FlatButton className="Feature-project-in">
+    <FlatButton
+      className="Feature-project-in"
+      onClick={props.onClick}
+    >
       <div className="Featured-project-title-row">
         <Avatar src={props.project.avatar_url} />
         <h3 className="Featured-project-title">{props.project.name}</h3>
@@ -148,7 +151,10 @@ const FeaturedProject = props => (
 )
 
 const OtherProject = props => (
-  <FlatButton className="Other-project">
+  <FlatButton
+    className="Other-project"
+    onClick={props.onClick}
+  >
     <div className="Other-project-in">
       <Avatar src={props.project.avatar_url} />
       <div className="Other-project-title-col">
@@ -170,22 +176,45 @@ class DashBoard extends Component {
   constructor(props) {
     super(props)
     console.log(props)
-    this.state = {}
+    this.state = {
+      modalOpen: false,
+      projectSelected: null,
+    }
   }
 
   componentDidMount() {
     this.props.loadProfile()
   }
 
+  handleOpen = (project) => {
+    console.log(project)
+    this.setState({ modalOpen: true, projectSelected: project })
+  };
+
+  handleClose = () => {
+    this.setState({ modalOpen: false })
+  };
+
   render() {
+    const selectedProj = this.state.projectSelected || {}
     return (
       <div className="App">
         <AppToolbar auth={this.props.route.auth} />
         <div className="Content Side-space">
           <Subheader>Summary of your Github contributions</Subheader>
           <UserInfo profile={this.props.profile.profile} />
-          <ProjectList />
+          <ProjectList onSelect={this.handleOpen} />
         </div>
+        <Dialog
+          title="Dialog With Actions"
+          modal={false}
+          open={this.state.modalOpen}
+          onRequestClose={() => {
+            this.setState({ modalOpen: false })
+          }}
+        >
+          <Avatar src={selectedProj.avatar_url || ''} />
+        </Dialog>
       </div>
     )
   }
