@@ -1,6 +1,7 @@
 import Auth0Lock from 'auth0-lock'
 import { browserHistory } from 'react-router'
 
+import { api } from './fetch'
 import { isTokenExpired } from './jwtHelper'
 import { redirectUrl } from '../../config/auth'
 
@@ -20,10 +21,16 @@ export default class AuthService {
   }
 
   doAuthentication(authResult) {
+    // get github profile
+    this.lock.getUserInfo(authResult.accessToken, (err, profile) => {
+      localStorage.setItem('profile', JSON.stringify(profile))
+    })
+
     // Saves the user token
-    this.setToken(authResult.idToken)
+    this.setToken('id_token', authResult.idToken)
+    this.setToken('access_token', authResult.accessToken)
     // navigate to the home route
-    browserHistory.replace('/auth')
+    browserHistory.replace('/')
   }
 
   login() {
@@ -37,14 +44,18 @@ export default class AuthService {
     return !!token && !isTokenExpired(token)
   }
 
-  setToken(idToken) {
+  setToken(key, idToken) {
     // Saves user token to local storage
-    localStorage.setItem('id_token', idToken)
+    localStorage.setItem(key, idToken)
   }
 
   getToken() {
     // Retrieves the user token from local storage
     return localStorage.getItem('id_token')
+  }
+
+  getProfile() {
+    return localStorage.getItem('profile')
   }
 
   logout() {

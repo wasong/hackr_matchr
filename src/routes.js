@@ -17,12 +17,18 @@ const requireAuth = (nextState, replace) => {
   }
 }
 
+const requireNotAuth = (nextState, replace) => {
+  if (auth.loggedIn()) {
+    replace({ pathname: '/' })
+  }
+}
+
 const Routes = ({ store }) => (
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" component={App} />
+      <Route path="/" component={App} onEnter={requireAuth} auth={auth} />
       <Route path="/auth" component={Auth} auth={auth} onEnter={requireAuth} />
-      <Route path="/login" component={Login} auth={auth} />
+      <Route path="/login" component={Login} onEnter={requireNotAuth} auth={auth} />
     </Router>
   </Provider>
 )
