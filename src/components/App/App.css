@@ -1,6 +1,7 @@
 h2 {
   margin: 0;
 }
+
 .App {
   display: flex;
   flex-direction: column;
@@ -55,3 +56,4 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+

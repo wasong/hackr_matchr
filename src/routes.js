@@ -3,6 +3,7 @@ import { Router, Route, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 
 import AuthService from './utils/auth'
+import Dashboard from './components/App/Dashboard.graphql'
 import App from './components/App'
 import Auth from './components/Auth'
 import Login from './components/Login'
@@ -26,6 +27,7 @@ const requireNotAuth = (nextState, replace) => {
 const Routes = ({ store }) => (
   <Provider store={store}>
     <Router history={browserHistory}>
+      <Route path="/dashboard" component={Dashboard} auth={auth} />
       <Route path="/" component={App} onEnter={requireAuth} auth={auth} />
       <Route path="/auth" component={Auth} auth={auth} onEnter={requireAuth} />
       <Route path="/login" component={Login} onEnter={requireNotAuth} auth={auth} />

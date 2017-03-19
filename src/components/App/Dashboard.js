@@ -1,8 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router'
-import { Paper, FlatButton, Avatar, Subheader, List, ListItem } from 'material-ui'
+import React, { Component } from 'react'
+import { Paper, Avatar, Subheader, List, ListItem } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
-import Logo from '../sharedComponents/logo'
 import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
 
@@ -42,17 +40,6 @@ const defaultValues = {
     types: ['Front-end', 'Android'],
   }],
 }
-
-const App = props => (
-  <div className="App">
-    <AppToolbar auth={props.route.auth} />
-    <div className="Content Side-space">
-      <Subheader>Summary of your Github contributions</Subheader>
-      <UserInfo />
-      <ProjectList />
-    </div>
-  </div>
-)
 
 const UserInfo = props => (
   <div className="User-info">
@@ -131,4 +118,28 @@ const FeaturedProject = props => (
   </Paper>
 )
 
-export default App
+class DashBoard extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
+  componentDidMount() {
+    this.props.loadProfile()
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <AppToolbar auth={this.props.route.auth} />
+        <div className="Content Side-space">
+          <Subheader>Summary of your Github contributions</Subheader>
+          <UserInfo />
+          <ProjectList />
+        </div>
+      </div>
+    )
+  }
+}
+
+export default DashBoard
