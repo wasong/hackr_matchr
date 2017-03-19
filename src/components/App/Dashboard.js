@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dialog, Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
+import { Dialog, Chip, Paper, Avatar, Subheader, List, FlatButton } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
@@ -16,20 +16,14 @@ const devTypeToHex = devType => (
   }[devType] || '#000000'
 )
 
-// const getProjectRank = project => {
-//
-//     Map each skill of the project to the users proficiencies
-//       1st pro -> 100pt
-//       2st pro -> 90
-//       70
-//       50
-//       30
-//       10
-//     score = sum of skills / number of skills in project
-//
-//   score = 0;
-//   return score;
-// }
+const getProjectRank = (project, proficiencies) => {
+  let score = 0
+  project.availableSpots.forEach((spot) => {
+    score += proficiencies[spot] || 0
+  })
+  score /= project.availableSpots.length
+  return score
+}
 
 const UserInfo = props => (
   <div className="User-info">
@@ -162,6 +156,7 @@ class DashBoard extends Component {
       open: false,
       selectedProj: {},
       projects: [],
+      lineFields: false,
     }
   }
 
@@ -169,9 +164,9 @@ class DashBoard extends Component {
     const hasUserData = nextProps.data && nextProps.data.proficiencies
     const hasProjectData = nextProps.query && !nextProps.query.loading && nextProps.query.allProjects
     if (hasUserData && hasProjectData) {
-      // const allProjects = nextProps.query.allProjects;
-      // const sortedProjects =
-      this.setState({ projects: nextProps.query.allProjects })
+      this.setState({ projects: JSON.parse(JSON.stringify(nextProps.query.allProjects)).sort((a, b) => {
+        return getProjectRank(b, nextProps.data.proficiencies) - getProjectRank(a, nextProps.data.proficiencies)
+      }) })
     }
   }
 
@@ -183,35 +178,54 @@ class DashBoard extends Component {
     this.setState({ open: false })
   };
 
+  toggleDialog = (type) => {
+    this.setState({ [type]: !this.state[type] })
+  }
+
   render() {
     return (
       <div className="App">
         <AppToolbar auth={this.props.auth} />
         <div className="Content Side-space">
-          <Subheader>Summary of your Github contributions</Subheader>
-          <UserInfo
-            avatar={this.props.data.profile.avatar_url}
-            name={this.props.data.profile.name}
-            login={this.props.data.profile.login}
-            frontEnd={this.props.data.proficiencies.frontEnd}
-            backEnd={this.props.data.proficiencies.backEnd}
-            android={this.props.data.proficiencies.android}
-            ios={this.props.data.proficiencies.ios}
-            systems={this.props.data.proficiencies.systems}
-            game={this.props.data.proficiencies.game}
-          />
-          <ProjectList onSelect={this.handleOpen} projects={this.state.projects} />
-          <Dialog
-            title={this.state.selectedProj.name}
-            modal={false}
-            open={this.state.open}
-            onRequestClose={this.handleClose}
-          >
-            <div>
-              <Avatar src={this.state.selectedProj.avatarUrl} />
-              <p>{this.state.selectedProj.description}</p>
-            </div>
-          </Dialog>
+          {
+            this.props.query && this.props.query.loading ?
+            null : (
+              <div>
+                <Subheader>Summary of your Github contributions</Subheader>
+                <UserInfo
+                  avatar={this.props.data.profile.avatar_url}
+                  name={this.props.data.profile.name}
+                  login={this.props.data.profile.login}
+                  frontEnd={this.props.data.proficiencies.frontEnd}
+                  backEnd={this.props.data.proficiencies.backEnd}
+                  android={this.props.data.proficiencies.android}
+                  ios={this.props.data.proficiencies.ios}
+                  systems={this.props.data.proficiencies.systems}
+                  game={this.props.data.proficiencies.game}
+                />
+                <ProjectList onSelect={this.handleOpen} projects={this.state.projects} />
+                <Dialog
+                  title={this.state.selectedProj.name}
+                  modal={false}
+                  open={this.state.open}
+                  onRequestClose={this.handleClose}
+                >
+                  <div>
+                    <Avatar src={this.state.selectedProj.avatarUrl} />
+                    <p>{this.state.selectedProj.description}</p>
+                  </div>
+                </Dialog>
+                <Dialog
+                  title="Enter estimated lines committed"
+                  modal={false}
+                  open={this.state.lineFields}
+                  onRequestClose={this.toggleDialog}
+                >
+                  TEXT FIELDS
+                </Dialog>
+              </div>
+            )
+          }
         </div>
       </div>
     )
