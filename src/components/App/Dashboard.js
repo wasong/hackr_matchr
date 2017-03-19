@@ -43,12 +43,12 @@ const defaultValues = {
 
 const UserInfo = props => (
   <div className="User-info">
-    <Paper zDepth={3} className="Breathing-room User-info-profile-section">
+    <Paper zDepth={1} className="Breathing-room User-info-profile-section">
       <Avatar className="User-info-avatar" src={defaultValues.userAvatarURL} />
       <h1>{defaultValues.firstName} {defaultValues.lastName}</h1>
       <h2>{defaultValues.userName}</h2>
     </Paper>
-    <Paper zDepth={3} className="Breathing-room User-info-types-section">
+    <Paper zDepth={1} className="Breathing-room User-info-types-section">
       <Doughnut
         data={{
           labels: [
@@ -85,33 +85,36 @@ const UserInfo = props => (
 )
 
 const ProjectList = props => (
-  <Paper zDepth={3} className="Breathing-room Projects-info">
+  <div className="Projects-info">
     <List>
       <Subheader>Projects recommended for you</Subheader>
       <div className="Featured-row">
         {
           defaultValues.projects.slice(0, 3).map(project => (
-            <FeaturedProject />
+            <FeaturedProject project={project} />
           ))
         }
       </div>
       <Subheader>Other projects you may be interested in</Subheader>
-      {
-        defaultValues.projects.slice(3).map(project => (
-          <ListItem
-            primaryText={project.name}
-            secondaryText={project.description}
-            leftAvatar={<Avatar src={project.projectAvatarURL} />}
-          />
-        ))
-      }
+      <Paper zDepth={1}>
+        {
+          defaultValues.projects.slice(3).map(project => (
+            <ListItem
+              primaryText={project.name}
+              secondaryText={project.description}
+              leftAvatar={<Avatar src={project.projectAvatarURL} />}
+            />
+          ))
+        }
+      </Paper>
     </List>
-  </Paper>
+  </div>
 )
 
 const FeaturedProject = props => (
   <Paper zDepth={1} className="Featured-project Breathing-room">
-    <p>hi</p>
+    <h2>{props.project.name}</h2>
+    <p>{props.project.description}</p>
   </Paper>
 )
 
@@ -130,6 +133,7 @@ class DashBoard extends Component {
       <div className="App">
         <AppToolbar auth={this.props.route.auth} />
         <div className="Content Side-space">
+          <Subheader>Summary of your Github contributions</Subheader>
           <UserInfo />
           <ProjectList />
         </div>
