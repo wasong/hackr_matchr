@@ -26,7 +26,7 @@ const reducer = createReducer({}, {
   [LOAD_COMMITS](state, action) {
     return {
       ...state,
-      commits: action.commits,
+      commits: [...state.commits, action.commits],
     }
   },
   [LOAD_REPOS](state, action) {
@@ -38,7 +38,7 @@ const reducer = createReducer({}, {
   [LOAD_COMMIT_FILES](state, action) {
     return {
       ...state,
-      files: action.files,
+      proficiencies: action.proficiencies,
     }
   },
 })
@@ -65,51 +65,95 @@ export const loadCommits = (commits) => {
   }
 }
 
-export const loadCommitFiles = (files) => {
+export const loadCommitFiles = (proficiencies) => {
   return {
     type: LOAD_COMMIT_FILES,
-    files,
+    proficiencies,
   }
 }
 
 // thunks
-export const loadCommitsThunk = (repos) => {
-  return async (dispatch) => {
-    const commits = []
-    repos.forEach(async (repo) => {
-      const name = repo.full_name
-      let repoCommits = await api(`https://api.github.com/repos/${name}/commits`)
-      repoCommits = await repoCommits.json()
-      commits.push(repoCommits)
-    })
-    dispatch(loadCommits(commits))
-    return commits
-  }
-}
-
-export const loadCommitFilesThunk = (commits) => {
-  return async (dispatch) => {
-    const data = commits
-    data.forEach(c => console.log(c))
-    dispatch(loadCommitFiles(data))
-    return data
-  }
-}
-
 export const loadProfileThunk = (user) => {
-  return async (dispatch) => {
-    // TODO: add error handling
-    let profile = await api(`https://api.github.com/users/${user}`)
-    profile = await profile.json()
-    dispatch(loadProfile(profile))
+  return dispatch => api(`https://api.github.com/users/${user}`)
+      .then(response => response.json())
+      .then(profile => dispatch(loadProfile(profile)))
+}
 
-    let repos = await api(`https://api.github.com/users/${profile.login}/repos`)
-    repos = await repos.json()
-    dispatch(loadRepos(repos))
+export const loadReposThunk = (login) => {
+  return dispatch => api(`https://api.github.com/users/${login}/repos`)
+    .then(response => response.json())
+    .then(repos => dispatch(loadRepos(repos)))
+}
 
-    const commits = await dispatch(loadCommitsThunk(repos))
-    const commitFiles = await dispatch(loadCommitFilesThunk(commits))
-  }
+export const loadCommitsThunk = (repos) => {
+  return dispatch => Promise.all(repos.map((repo) => {
+    const name = repo.full_name
+    return api(`https://api.github.com/repos/${name}/commits`)
+    .then(response => response.json())
+    .then(commits => dispatch(loadCommits(commits)))
+  }))
+}
+
+export const loadCommitFilesThunk = (commitsArr) => {
+  return dispatch => Promise.all(commitsArr.map((c) => {
+    // This is a rate limit killer
+    // return Promise.all(c.map((data) => {
+    //   return api(data.url)
+    //   .then(response => response.json())
+    //   .then(json => console.log(json))
+    // }))
+    return api(c[0].url)
+      .then(response => response.json())
+      .then((json) => {
+        const { files } = json
+
+        const parseFileType = (fileName) => {
+          const extension = fileName ? fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase() : ''
+          // TODO: back-end should have js too for nodejs
+          const frontEnd = ['js', 'jsx', 'html', 'css', 'less'].find(elem => elem === extension)
+          const backend = ['py', 'rb', 'php'].find(elem => elem === extension)
+          const systems = ['c', 'cpp', 'go', 'cs'].find(elem => elem === extension)
+          const ios = ['swift', 'm'].find(elem => elem === extension)
+          const android = ['java'].find(elem => elem === extension)
+          const game = ['unity', 'fbx'].find(elem => elem === extension)
+          if (frontEnd) return 'frontEnd'
+          if (backend) return 'backEnd'
+          if (systems) return 'systems'
+          if (ios) return 'ios'
+          if (android) return 'android'
+          if (game) return 'game'
+          return null
+        }
+
+        const obj = {
+          frontEnd: 0,
+          backEnd: 0,
+          systems: 0,
+          ios: 0,
+          android: 0,
+          game: 0,
+        }
+
+        files.forEach((file) => {
+          const { filename, additions, deletions } = file
+          const fileType = parseFileType(filename)
+          const linesCommitted = additions + deletions
+          if (fileType) obj[fileType] += linesCommitted
+        })
+        dispatch(loadCommitFiles(obj))
+      })
+  }))
+}
+
+export const initialLoad = (name) => {
+  return dispatch => dispatch(loadProfileThunk(name))
+    .then(action => dispatch(loadReposThunk(action.profile.login)))
+    .then(action => dispatch(loadCommitsThunk(action.repos)))
+    .then((actionArray) => {
+      const commits = []
+      actionArray.forEach(r => commits.push(r.commits))
+      dispatch(loadCommitFilesThunk(commits))
+    })
 }
 
 export default reducer

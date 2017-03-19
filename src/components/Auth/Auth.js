@@ -1,7 +1,7 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
-import { FlatButton, AppBar } from 'material-ui'
+import { AppBar } from 'material-ui'
 
 import css from './Auth.css'
 

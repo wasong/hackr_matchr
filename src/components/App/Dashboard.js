@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Paper, Avatar, Subheader, List, ListItem } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import AppToolbar from '../sharedComponents/AppToolbar'
@@ -44,9 +44,9 @@ const defaultValues = {
 const UserInfo = props => (
   <div className="User-info">
     <Paper zDepth={1} className="Breathing-room User-info-profile-section">
-      <Avatar className="User-info-avatar" src={defaultValues.userAvatarURL} />
-      <h1>{defaultValues.firstName} {defaultValues.lastName}</h1>
-      <h2>{defaultValues.userName}</h2>
+      <Avatar className="User-info-avatar" src={props.avatar} />
+      <h1>{props.name}</h1>
+      <h2>{props.login}</h2>
     </Paper>
     <Paper zDepth={1} className="Breathing-room User-info-types-section">
       <Doughnut
@@ -60,7 +60,14 @@ const UserInfo = props => (
             'Games',
           ],
           datasets: [{
-            data: [300, 50, 100, 70, 20, 100],
+            data: [
+              props.frontEnd,
+              props.backEnd,
+              props.android,
+              props.ios,
+              props.systems,
+              props.game,
+            ],
             backgroundColor: [
               '#f7cc0c',
               '#f70c0c',
@@ -91,7 +98,7 @@ const ProjectList = props => (
       <div className="Featured-row">
         {
           defaultValues.projects.slice(0, 3).map(project => (
-            <FeaturedProject project={project} />
+            <FeaturedProject key={project.name} project={project} />
           ))
         }
       </div>
@@ -100,6 +107,7 @@ const ProjectList = props => (
         {
           defaultValues.projects.slice(3).map(project => (
             <ListItem
+              key={project.name}
               primaryText={project.name}
               secondaryText={project.description}
               leftAvatar={<Avatar src={project.projectAvatarURL} />}
@@ -118,28 +126,26 @@ const FeaturedProject = props => (
   </Paper>
 )
 
-class DashBoard extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
+const Dashboard = props => (
+  <div className="App">
+    {console.log(props)}
+    <AppToolbar auth={props.auth} />
+    <div className="Content Side-space">
+      <Subheader>Summary of your Github contributions</Subheader>
+      <UserInfo
+        avatar={props.data.profile.avatar_url}
+        name={props.data.profile.name}
+        login={props.data.profile.login}
+        frontEnd={props.data.proficiencies.frontEnd}
+        backEnd={props.data.proficiencies.backEnd}
+        android={props.data.proficiencies.android}
+        ios={props.data.proficiencies.ios}
+        systems={props.data.proficiencies.systems}
+        game={props.data.proficiencies.game}
+      />
+      <ProjectList />
+    </div>
+  </div>
+)
 
-  componentDidMount() {
-    this.props.loadProfile()
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <AppToolbar auth={this.props.route.auth} />
-        <div className="Content Side-space">
-          <Subheader>Summary of your Github contributions</Subheader>
-          <UserInfo />
-          <ProjectList />
-        </div>
-      </div>
-    )
-  }
-}
-
-export default DashBoard
+export default Dashboard

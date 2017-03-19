@@ -26,6 +26,7 @@ const store = createStore(rootReducer,
       profile: {},
       repos: [],
       commits: [],
+      proficiencies: {},
     },
   },
   applyMiddleware(
