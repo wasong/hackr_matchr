@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link, browserHistory } from 'react-router'
-import { Paper, Toolbar, ToolbarGroup, FlatButton, Avatar, Subheader, List, ListItem } from 'material-ui'
+import { Link } from 'react-router'
+import { Paper, FlatButton, Avatar, Subheader, List, ListItem } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import Logo from '../sharedComponents/logo'
+import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
 
 const defaultValues = {
@@ -25,17 +26,17 @@ const defaultValues = {
     projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
     types: ['Front-end', 'Android'],
   }, {
-    name: 'Project0',
+    name: 'Project1',
     description: 'project description',
     projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
     types: ['Front-end', 'Android'],
   }, {
-    name: 'Project0',
+    name: 'Project2',
     description: 'project description',
     projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
     types: ['Front-end', 'Android'],
   }, {
-    name: 'Project0',
+    name: 'Project3',
     description: 'project description',
     projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
     types: ['Front-end', 'Android'],
@@ -44,22 +45,7 @@ const defaultValues = {
 
 const App = props => (
   <div className="App">
-    <Toolbar className="App-toolbar">
-      <ToolbarGroup firstChild>
-        <Logo />
-      </ToolbarGroup>
-      <ToolbarGroup lastChild>
-        <FlatButton
-          label="Sign out"
-          onClick={
-            () => {
-              props.route.auth.logout()
-              browserHistory.push('/login')
-            }
-          }
-        />
-      </ToolbarGroup>
-    </Toolbar>
+    <AppToolbar auth={props.route.auth} />
     <div className="Content Side-space">
       <UserInfo />
       <ProjectList />
@@ -110,30 +96,23 @@ const UserInfo = props => (
   </div>
 )
 
-const ProficiencyGraph = props => (
-  <div className="Bar-graph-container">
-    {JSON.stringify(props.proficiencies)}
-  </div>
-)
-
 const ProjectList = props => (
   <Paper zDepth={3} className="Breathing-room Projects-info">
     <List>
       <Subheader>Projects recommended for you</Subheader>
+      <div className="Featured-row">
+        {
+          defaultValues.projects.slice(0, 3).map(project => (
+            <FeaturedProject />
+          ))
+        }
+      </div>
+      <Subheader>Other projects you may be interested in</Subheader>
       {
-        defaultValues.projects.map(project => (
+        defaultValues.projects.slice(3).map(project => (
           <ListItem
             primaryText={project.name}
-            secondaryText={
-              <div style={{ display: 'Block' }}>
-                <p>project.description</p>
-                {
-                  project.types.map(type => (
-                    <p>{type}</p> // todo: use seperate component
-                  ))
-                }
-              </div>
-            }
+            secondaryText={project.description}
             leftAvatar={<Avatar src={project.projectAvatarURL} />}
           />
         ))
@@ -142,8 +121,10 @@ const ProjectList = props => (
   </Paper>
 )
 
-const ProjectListElement = props => (
-  <div />
+const FeaturedProject = props => (
+  <Paper zDepth={1} className="Featured-project Breathing-room">
+    <p>hi</p>
+  </Paper>
 )
 
 export default App
