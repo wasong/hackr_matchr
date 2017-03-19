@@ -22,7 +22,11 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer,
   {
     base: '',
-    profile: null,
+    profile: {
+      profile: {},
+      repos: [],
+      commits: [],
+    },
   },
   applyMiddleware(
     thunkMiddleware,

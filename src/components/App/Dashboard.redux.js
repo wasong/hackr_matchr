@@ -1,12 +1,13 @@
 import { connect } from 'react-redux'
 
 import Dashboard from './Dashboard'
-import { loadProfileThunk } from '../../dashboard.modules'
+import { loadProfileThunk, loadReposThunk } from '../../dashboard.modules'
 
 const mapStateToProps = (state) => {
   // return an object with all of or some store state
   return {
     profile: state.profile,
+    commits: state.commits,
   }
 }
 
@@ -16,6 +17,9 @@ const mapDispatchToProps = (dispatch) => {
     loadProfile() {
       const profile = JSON.parse(localStorage.getItem('profile'))
       dispatch(loadProfileThunk(profile.nickname))
+    },
+    loadRepos() {
+      dispatch(loadReposThunk())
     },
   }
 }
