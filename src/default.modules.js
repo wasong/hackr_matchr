@@ -19,7 +19,7 @@ const createReducer = (initState, handlers) => {
 
 // reducer
 const reducer = createReducer({}, {
-  [DEFAULT](state, action) {
+  [DEFAULT](state, action) { // eslint-disable-line
     return state
   },
 })

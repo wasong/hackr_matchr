@@ -25,7 +25,8 @@ export default class AuthService {
       localStorage.setItem('profile', JSON.stringify(profile))
     })
     // Saves the user token
-    this.setToken(authResult.idToken)
+    this.setToken('id_token', authResult.idToken)
+    this.setToken('access_token', authResult.accessToken)
     // navigate to the home route
     browserHistory.replace('/')
   }
@@ -41,9 +42,9 @@ export default class AuthService {
     return !!token && !isTokenExpired(token)
   }
 
-  setToken(idToken) {
+  setToken(key, idToken) {
     // Saves user token to local storage
-    localStorage.setItem('id_token', idToken)
+    localStorage.setItem(key, idToken)
   }
 
   getToken() {

@@ -61,9 +61,9 @@ const defaultValues = {
 const UserInfo = props => (
   <div className="User-info">
     <Paper zDepth={1} className="Breathing-room User-info-profile-section">
-      <Avatar className="User-info-avatar" src={props.profile.avatar_url} />
-      <h1>{props.profile.name}</h1>
-      <h2 className="User-info-login-name">{props.profile.login}</h2>
+      <Avatar className="User-info-avatar" src={props.avatar} />
+      <h1>{props.name}</h1>
+      <h2 className="User-info-login-name">{props.login}</h2>
     </Paper>
     <Paper zDepth={1} className="Breathing-room User-info-types-section">
       <Doughnut
@@ -77,7 +77,14 @@ const UserInfo = props => (
             'Games',
           ],
           datasets: [{
-            data: [300, 50, 100, 70, 20, 100],
+            data: [
+              props.frontEnd,
+              props.backEnd,
+              props.android,
+              props.ios,
+              props.systems,
+              props.game,
+            ],
             backgroundColor: [
               devTypeToHex('Front end web'),
               devTypeToHex('Back end web'),
@@ -108,7 +115,10 @@ const ProjectList = props => (
       <div className="Featured-row">
         {
           defaultValues.projects.slice(0, 3).map(project => (
-            <FeaturedProject project={project} />
+            <FeaturedProject
+              key={project.name}
+              project={project}
+            />
           ))
         }
       </div>
@@ -118,7 +128,10 @@ const ProjectList = props => (
           <Paper zDepth={1} className="Breathing-room">
             {
               defaultValues.projects.slice(3).map(project => (
-                <OtherProject project={project} />
+                <OtherProject
+                  key={project.name}
+                  project={project}
+                />
               ))
             }
           </Paper>
@@ -147,6 +160,7 @@ const FeaturedProject = props => (
   </Paper>
 )
 
+
 const OtherProject = props => (
   <FlatButton className="Other-project">
     <div className="Other-project-in">
@@ -173,17 +187,24 @@ class DashBoard extends Component {
     this.state = {}
   }
 
-  componentDidMount() {
-    this.props.loadProfile()
-  }
-
   render() {
     return (
       <div className="App">
-        <AppToolbar auth={this.props.route.auth} />
+        {console.log(this.props)}
+        <AppToolbar auth={this.props.auth} />
         <div className="Content Side-space">
           <Subheader>Summary of your Github contributions</Subheader>
-          <UserInfo profile={this.props.profile.profile} />
+          <UserInfo
+            avatar={this.props.data.profile.avatar_url}
+            name={this.props.data.profile.name}
+            login={this.props.data.profile.login}
+            frontEnd={this.props.data.proficiencies.frontEnd}
+            backEnd={this.props.data.proficiencies.backEnd}
+            android={this.props.data.proficiencies.android}
+            ios={this.props.data.proficiencies.ios}
+            systems={this.props.data.proficiencies.systems}
+            game={this.props.data.proficiencies.game}
+          />
           <ProjectList />
         </div>
       </div>
