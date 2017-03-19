@@ -16,47 +16,20 @@ const devTypeToHex = devType => (
   }[devType] || '#000000'
 )
 
-const defaultValues = {
-  firstName: 'Tim',
-  lastName: 'Bo',
-  userName: 'Timbobobo',
-  userAvatarURL: 'http://images.wisegeek.com/computer-programmer-or-hacker.jpg',
-  proficiencies: {
-    mobile: 0.4,
-    web: 0.7,
-  },
-  projects: [{
-    name: 'Solve P = NP',
-    description: 'Come join my weekend project!',
-    avatar_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Complexity_classes.svg/414px-Complexity_classes.svg.png',
-    spots: ['Front end web', 'Android', 'IOS', 'Systems', 'Back end web'],
-  }, {
-    name: 'Project0',
-    description: 'project description',
-    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    spots: ['Front end web', 'Android'],
-  }, {
-    name: 'Project1',
-    description: 'project description',
-    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    spots: ['Front end web', 'Android'],
-  }, {
-    name: 'Project2',
-    description: 'project description',
-    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    spots: ['Front end web', 'Android'],
-  }, {
-    name: 'Project3',
-    description: 'project description',
-    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    spots: ['Front end web', 'Android'],
-  }, {
-    name: 'The ultimate game',
-    description: 'project description',
-    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    spots: ['Games', 'Back end web', 'Android', 'IOS'],
-  }],
-}
+// const getProjectRank = project => {
+//
+//     Map each skill of the project to the users proficiencies
+//       1st pro -> 100pt
+//       2st pro -> 90
+//       70
+//       50
+//       30
+//       10
+//     score = sum of skills / number of skills in project
+//
+//   score = 0;
+//   return score;
+// }
 
 const UserInfo = props => (
   <div className="User-info">
@@ -114,7 +87,7 @@ const ProjectList = props => (
       <Subheader>Projects recommended for you</Subheader>
       <div className="Featured-row">
         {
-          defaultValues.projects.slice(0, 3).map(project => (
+          props.projects.slice(0, 3).map(project => (
             <FeaturedProject
               key={project.name}
               project={project}
@@ -123,12 +96,12 @@ const ProjectList = props => (
           ))
         }
       </div>
-      {defaultValues.projects.length > 3 ? (
+      {props.projects.length > 3 ? (
         <div>
           <Subheader>Other projects you may be interested in</Subheader>
           <Paper zDepth={1} className="Breathing-room">
             {
-              defaultValues.projects.slice(3).map(project => (
+              props.projects.slice(3).map(project => (
                 <OtherProject
                   key={project.name}
                   project={project}
@@ -147,13 +120,13 @@ const FeaturedProject = props => (
   <Paper zDepth={1} className="Featured-project Breathing-room">
     <FlatButton className="Feature-project-in" onClick={() => { props.onClick(props.project) }}>
       <div className="Featured-project-title-row">
-        <Avatar src={props.project.avatar_url} />
+        <Avatar src={props.project.avatarUrl} />
         <h3 className="Featured-project-title">{props.project.name}</h3>
       </div>
       <p className="Featured-project-desc">{props.project.description}</p>
       <div className="Featured-project-tag-box">
         {
-          props.project.spots.map(devType => (
+          props.project.availableSpots.map(devType => (
             <Chip key={devType} className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
           ))
         }
@@ -166,14 +139,14 @@ const FeaturedProject = props => (
 const OtherProject = props => (
   <FlatButton className="Other-project" onClick={() => { props.onClick(props.project) }}>
     <div className="Other-project-in">
-      <Avatar src={props.project.avatar_url} />
+      <Avatar src={props.project.avatarUrl} />
       <div className="Other-project-title-col">
         <h3 className="Other-project-title">{props.project.name}</h3>
         <p className="Other-project-desc">{props.project.description}</p>
       </div>
       <div className="Other-project-tag-col">
         {
-          props.project.spots.map(devType => (
+          props.project.availableSpots.map(devType => (
             <Chip key={devType} className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
           ))
         }
@@ -189,6 +162,17 @@ class DashBoard extends Component {
     this.state = {
       open: false,
       selectedProj: {},
+      projects: [],
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const hasUserData = nextProps.data && nextProps.data.proficiencies
+    const hasProjectData = nextProps.query && !nextProps.query.loading && nextProps.query.allProjects
+    if (hasUserData && hasProjectData) {
+      // const allProjects = nextProps.query.allProjects;
+      // const sortedProjects =
+      this.setState({ projects: nextProps.query.allProjects })
     }
   }
 
@@ -218,7 +202,7 @@ class DashBoard extends Component {
             systems={this.props.data.proficiencies.systems}
             game={this.props.data.proficiencies.game}
           />
-          <ProjectList onSelect={this.handleOpen} />
+          <ProjectList onSelect={this.handleOpen} projects={this.state.projects} />
           <Dialog
             title={this.state.selectedProj.name}
             modal={false}
@@ -226,7 +210,7 @@ class DashBoard extends Component {
             onRequestClose={this.handleClose}
           >
             <div>
-              <Avatar src={this.state.selectedProj.avatar_url} />
+              <Avatar src={this.state.selectedProj.avatarUrl} />
               <p>{this.state.selectedProj.description}</p>
             </div>
           </Dialog>
