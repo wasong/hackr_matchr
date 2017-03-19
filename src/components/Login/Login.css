@@ -1,0 +1,21 @@
+.Login-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	height: 66vh;
+}
+
+.Login-page-subtitle {
+	font-weight: 200;
+}
+
+.Background {
+	position: absolute;
+	top: 63vh;
+	left: 0;
+	height: 37vh;
+	width: 100%;
+	z-index: -1;
+	background-color: rgba(0, 0, 0, 0.1);
+}

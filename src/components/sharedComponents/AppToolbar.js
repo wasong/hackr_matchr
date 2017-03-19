@@ -8,7 +8,7 @@ const AppToolbar = props => (
   <Paper className="App-toolbar" zDepth={1}>
     <Toolbar className="App-toolbar">
       <ToolbarGroup firstChild>
-        <Logo style={{ marginLeft: '24px' }} />
+        <Logo style={{ marginLeft: '24px', fontSize: '18px' }} />
       </ToolbarGroup>
       <ToolbarGroup lastChild>
         {props.auth.loggedIn() ? (

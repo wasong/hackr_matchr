@@ -1,8 +1,20 @@
 import React, { Component } from 'react'
-import { Paper, Avatar, Subheader, List, ListItem } from 'material-ui'
+import { Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
+
+
+const devTypeToHex = devType => (
+  {
+    'Front end web': '#f7cc0c',
+    'Back end web': '#f70c0c',
+    Android: '#0cf727',
+    IOS: '#0cb4f7',
+    Systems: '#9e9e9e',
+    Games: '#f7950c',
+  }[devType] || '#000000'
+)
 
 const defaultValues = {
   firstName: 'Tim',
@@ -16,37 +28,42 @@ const defaultValues = {
   projects: [{
     name: 'Solve P = NP',
     description: 'Come join my weekend project!',
-    projectAvatarURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Complexity_classes.svg/414px-Complexity_classes.svg.png',
-    types: ['Front-end', 'Android'],
+    avatar_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Complexity_classes.svg/414px-Complexity_classes.svg.png',
+    spots: ['Front end web', 'Android', 'IOS', 'Systems', 'Back end web'],
   }, {
     name: 'Project0',
     description: 'project description',
-    projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    types: ['Front-end', 'Android'],
+    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
+    spots: ['Front end web', 'Android'],
   }, {
     name: 'Project1',
     description: 'project description',
-    projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    types: ['Front-end', 'Android'],
+    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
+    spots: ['Front end web', 'Android'],
   }, {
     name: 'Project2',
     description: 'project description',
-    projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    types: ['Front-end', 'Android'],
+    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
+    spots: ['Front end web', 'Android'],
   }, {
     name: 'Project3',
     description: 'project description',
-    projectAvatarURL: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
-    types: ['Front-end', 'Android'],
+    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
+    spots: ['Front end web', 'Android'],
+  }, {
+    name: 'The ultimate game',
+    description: 'project description',
+    avatar_url: 'http://www.hdwallpapers.in/walls/windows_xp_bliss-wide.jpg',
+    spots: ['Games', 'Back end web', 'Android', 'IOS'],
   }],
 }
 
 const UserInfo = props => (
   <div className="User-info">
     <Paper zDepth={1} className="Breathing-room User-info-profile-section">
-      <Avatar className="User-info-avatar" src={defaultValues.userAvatarURL} />
-      <h1>{defaultValues.firstName} {defaultValues.lastName}</h1>
-      <h2>{defaultValues.userName}</h2>
+      <Avatar className="User-info-avatar" src={props.profile.avatar_url} />
+      <h1>{props.profile.name}</h1>
+      <h2 className="User-info-login-name">{props.profile.login}</h2>
     </Paper>
     <Paper zDepth={1} className="Breathing-room User-info-types-section">
       <Doughnut
@@ -56,26 +73,26 @@ const UserInfo = props => (
             'Back end web',
             'Android',
             'IOS',
-            'Software systems',
+            'Systems',
             'Games',
           ],
           datasets: [{
             data: [300, 50, 100, 70, 20, 100],
             backgroundColor: [
-              '#f7cc0c',
-              '#f70c0c',
-              '#0cf727',
-              '#0cb4f7',
-              '#9e9e9e',
-              '#f7950c',
+              devTypeToHex('Front end web'),
+              devTypeToHex('Back end web'),
+              devTypeToHex('Android'),
+              devTypeToHex('IOS'),
+              devTypeToHex('Systems'),
+              devTypeToHex('Games'),
             ],
             hoverBackgroundColor: [
-              '#f7cc0c',
-              '#f70c0c',
-              '#0cf727',
-              '#0cb4f7',
-              '#9e9e9e',
-              '#f7950c',
+              devTypeToHex('Front end web'),
+              devTypeToHex('Back end web'),
+              devTypeToHex('Android'),
+              devTypeToHex('IOS'),
+              devTypeToHex('Systems'),
+              devTypeToHex('Games'),
             ],
           }],
         }}
@@ -95,32 +112,64 @@ const ProjectList = props => (
           ))
         }
       </div>
-      <Subheader>Other projects you may be interested in</Subheader>
-      <Paper zDepth={1}>
-        {
-          defaultValues.projects.slice(3).map(project => (
-            <ListItem
-              primaryText={project.name}
-              secondaryText={project.description}
-              leftAvatar={<Avatar src={project.projectAvatarURL} />}
-            />
-          ))
-        }
-      </Paper>
+      {defaultValues.projects.length > 3 ? (
+        <div>
+          <Subheader>Other projects you may be interested in</Subheader>
+          <Paper zDepth={1} className="Breathing-room">
+            {
+              defaultValues.projects.slice(3).map(project => (
+                <OtherProject project={project} />
+              ))
+            }
+          </Paper>
+        </div>
+      ) : null}
     </List>
   </div>
 )
 
 const FeaturedProject = props => (
   <Paper zDepth={1} className="Featured-project Breathing-room">
-    <h2>{props.project.name}</h2>
-    <p>{props.project.description}</p>
+    <FlatButton className="Feature-project-in">
+      <div className="Featured-project-title-row">
+        <Avatar src={props.project.avatar_url} />
+        <h3 className="Featured-project-title">{props.project.name}</h3>
+      </div>
+      <p className="Featured-project-desc">{props.project.description}</p>
+      <div className="Featured-project-tag-box">
+        {
+          props.project.spots.map(devType => (
+            <Chip className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
+          ))
+        }
+      </div>
+    </FlatButton>
   </Paper>
+)
+
+const OtherProject = props => (
+  <FlatButton className="Other-project">
+    <div className="Other-project-in">
+      <Avatar src={props.project.avatar_url} />
+      <div className="Other-project-title-col">
+        <h3 className="Other-project-title">{props.project.name}</h3>
+        <p className="Other-project-desc">{props.project.description}</p>
+      </div>
+      <div className="Other-project-tag-col">
+        {
+          props.project.spots.map(devType => (
+            <Chip className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
+          ))
+        }
+      </div>
+    </div>
+  </FlatButton>
 )
 
 class DashBoard extends Component {
   constructor(props) {
     super(props)
+    console.log(props)
     this.state = {}
   }
 
@@ -134,7 +183,7 @@ class DashBoard extends Component {
         <AppToolbar auth={this.props.route.auth} />
         <div className="Content Side-space">
           <Subheader>Summary of your Github contributions</Subheader>
-          <UserInfo />
+          <UserInfo profile={this.props.profile.profile} />
           <ProjectList />
         </div>
       </div>
