@@ -1,3 +1,6 @@
+h2 {
+  margin: 0;
+}
 .App {
   display: flex;
   flex-direction: column;
@@ -5,20 +8,42 @@
 }
   .App-toolbar {
     width: 100%;
+    background-color: #FDFDFD !important;
   }
 .Content {
   margin-top: 20px;
-  min-width: 60%;
+}
+
+.Side-space {
+  min-width: 75%;
+}
+
+.Breathing-room {
+  margin: 5px;
+  padding: 5px;
 }
 
 .User-info {
-  padding-right: 40px;
-  padding-left: 40px;
+  display: flex;
+  flex-direction: row;
+  word-wrap: break-word;
 }
   .User-info-profile-section {
-    width: 33%;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 30%;
+    justify-content: center;
   }
     .User-info-avatar {
-      height: 200px !important; /* important to override material design */
-      width: 200px !important;
+      height: 250px !important; /* important to override material design */
+      width: 250px !important;
+      align-self: center;
     }
+
+  .User-info-types-section {
+    flex-basis: 70%;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+.Projects-info {
+}
