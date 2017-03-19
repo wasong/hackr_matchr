@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dialog, Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
+import { Dialog, Chip, Paper, Avatar, Subheader, List, FlatButton } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
