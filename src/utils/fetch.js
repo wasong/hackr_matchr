@@ -5,7 +5,7 @@ export const api = async (url, options = {}) => {
     method: options.method || 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `token ${process.env.token || '7d69b67db7e5a2304b669e2a387c504c197f045b'}`,
+      Authorization: `token ${process.env.token || 'db9f4a75955b1d4b49b9c3b3b836d9a27bcc7b9a'}`,
       ...options.headers,
     },
     body: {

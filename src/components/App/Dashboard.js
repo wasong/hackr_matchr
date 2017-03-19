@@ -19,8 +19,7 @@ const devTypeToHex = devType => (
 const getProjectRank = (project, proficiencies) => {
   let score = 0
   project.availableSpots.forEach((spot) => {
-    console.log(spot)
-    score += proficiencies[spot]
+    score += proficiencies[spot] || 0
   })
   score /= project.availableSpots.length
   return score
@@ -157,6 +156,7 @@ class DashBoard extends Component {
       open: false,
       selectedProj: {},
       projects: [],
+      lineFields: false,
     }
   }
 
@@ -177,6 +177,10 @@ class DashBoard extends Component {
   handleClose = () => {
     this.setState({ open: false })
   };
+
+  toggleDialog = (type) => {
+    this.setState({ [type]: !this.state[type] })
+  }
 
   render() {
     return (
@@ -210,6 +214,14 @@ class DashBoard extends Component {
                     <Avatar src={this.state.selectedProj.avatarUrl} />
                     <p>{this.state.selectedProj.description}</p>
                   </div>
+                </Dialog>
+                <Dialog
+                  title="Enter estimated lines committed"
+                  modal={false}
+                  open={this.state.lineFields}
+                  onRequestClose={this.toggleDialog}
+                >
+                  TEXT FIELDS
                 </Dialog>
               </div>
             )
