@@ -152,7 +152,7 @@ const FeaturedProject = props => (
       <div className="Featured-project-tag-box">
         {
           props.project.spots.map(devType => (
-            <Chip className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
+            <Chip key={devType} className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
           ))
         }
       </div>
@@ -172,7 +172,7 @@ const OtherProject = props => (
       <div className="Other-project-tag-col">
         {
           props.project.spots.map(devType => (
-            <Chip className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
+            <Chip key={devType} className="Featured-project-tag" style={{ backgroundColor: devTypeToHex(devType) }}>{devType}</Chip>
           ))
         }
       </div>
