@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
+import { Dialog, Chip, Paper, Avatar, Subheader, List, ListItem, FlatButton } from 'material-ui'
 import { Doughnut } from 'react-chartjs-2'
 import AppToolbar from '../sharedComponents/AppToolbar'
 import './App.css'
@@ -118,6 +118,7 @@ const ProjectList = props => (
             <FeaturedProject
               key={project.name}
               project={project}
+              onClick={props.onSelect}
             />
           ))
         }
@@ -131,6 +132,7 @@ const ProjectList = props => (
                 <OtherProject
                   key={project.name}
                   project={project}
+                  onClick={props.onSelect}
                 />
               ))
             }
@@ -143,7 +145,7 @@ const ProjectList = props => (
 
 const FeaturedProject = props => (
   <Paper zDepth={1} className="Featured-project Breathing-room">
-    <FlatButton className="Feature-project-in">
+    <FlatButton className="Feature-project-in" onClick={() => { props.onClick(props.project) }}>
       <div className="Featured-project-title-row">
         <Avatar src={props.project.avatar_url} />
         <h3 className="Featured-project-title">{props.project.name}</h3>
@@ -162,7 +164,7 @@ const FeaturedProject = props => (
 
 
 const OtherProject = props => (
-  <FlatButton className="Other-project">
+  <FlatButton className="Other-project" onClick={() => { props.onClick(props.project) }}>
     <div className="Other-project-in">
       <Avatar src={props.project.avatar_url} />
       <div className="Other-project-title-col">
@@ -184,8 +186,19 @@ class DashBoard extends Component {
   constructor(props) {
     super(props)
     console.log(props)
-    this.state = {}
+    this.state = {
+      open: false,
+      selectedProj: {},
+    }
   }
+
+  handleOpen = (project) => {
+    this.setState({ open: true, selectedProj: project })
+  };
+
+  handleClose = () => {
+    this.setState({ open: false })
+  };
 
   render() {
     return (
@@ -205,7 +218,18 @@ class DashBoard extends Component {
             systems={this.props.data.proficiencies.systems}
             game={this.props.data.proficiencies.game}
           />
-          <ProjectList />
+          <ProjectList onSelect={this.handleOpen} />
+          <Dialog
+            title={this.state.selectedProj.name}
+            modal={false}
+            open={this.state.open}
+            onRequestClose={this.handleClose}
+          >
+            <div>
+              <Avatar src={this.state.selectedProj.avatar_url} />
+              <p>{this.state.selectedProj.description}</p>
+            </div>
+          </Dialog>
         </div>
       </div>
     )
