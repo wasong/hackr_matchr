@@ -22,7 +22,7 @@ const Routes = ({ store }) => (
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route path="/dashboard" component={Dashboard} auth={auth} />
-      <Route path="/" component={App} />
+      <Route path="/" component={App} onEnter={requireAuth} auth={auth} />
       <Route path="/auth" component={Auth} auth={auth} onEnter={requireAuth} />
       <Route path="/login" component={Login} auth={auth} />
     </Router>
