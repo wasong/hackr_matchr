@@ -5,9 +5,12 @@ export const api = async (url, options = {}) => {
     method: options.method || 'GET',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `token ${process.env.token}`,
       ...options.headers,
     },
-    body: options.body || {},
+    body: {
+      ...options.body,
+    },
   })
   // TODO: parse data?
   return data
