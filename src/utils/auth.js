@@ -20,6 +20,10 @@ export default class AuthService {
   }
 
   doAuthentication(authResult) {
+    // get github profile
+    this.lock.getUserInfo(authResult.accessToken, (err, profile) => {
+      localStorage.setItem('profile', JSON.stringify(profile))
+    })
     // Saves the user token
     this.setToken(authResult.idToken)
     // navigate to the home route
@@ -45,6 +49,10 @@ export default class AuthService {
   getToken() {
     // Retrieves the user token from local storage
     return localStorage.getItem('id_token')
+  }
+
+  getProfile() {
+    return localStorage.getItem('profile')
   }
 
   logout() {

@@ -25,7 +25,26 @@ const onClickQuery = async () => {
   console.log(p)
 }
 
+
+const getAllUsers = async () => {
+  const options = {
+    query: gql`
+      query {
+        allPersons {
+          id
+          createdAt
+          types
+        }
+      }
+    `,
+  }
+
+  const p = await query(options)
+  console.log(p)
+}
+
 const debouncedQuery = debounce(onClickQuery, 250)
+const debouncedUsers = debounce(getAllUsers, 250)
 
 const App = props => (
   <div className="App">
@@ -39,6 +58,7 @@ const App = props => (
     <div><RaisedButton label="Console log Redux!" onClick={props.loadDefault} /></div>
     <div><RaisedButton label="Material UI" /></div>
     <div><RaisedButton label="onClick Query" onClick={debouncedQuery} /></div>
+    <div><RaisedButton label="Get All Users" onClick={debouncedUsers} /></div>
     <p><Link to="/auth">Auth</Link></p>
     <div>
       Display Graphql query:&nbsp;

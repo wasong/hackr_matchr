@@ -1,6 +1,9 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
+import { FlatButton, AppBar } from 'material-ui'
+
+import css from './Auth.css'
 
 const Auth = (props) => {
   const { auth } = props.route
@@ -10,8 +13,10 @@ const Auth = (props) => {
   }
   return (
     <div>
+      <AppBar title="Your Profile" />
       <p>Logged In!</p>
       <RaisedButton label="Logout" onClick={logOut} />
+      <RaisedButton label="This is a button" />
     </div>
   )
 }

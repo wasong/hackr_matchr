@@ -6,6 +6,7 @@ import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
 
 import base from './default.modules'
+import profile from './dashboard.modules'
 import Entry from './entry'
 import './index.css'
 
@@ -15,11 +16,13 @@ const loggerMiddleware = createLogger()
 const rootReducer = combineReducers({
   // add reducers here
   base,
+  profile,
 })
 
 const store = createStore(rootReducer,
   {
     base: '',
+    profile: null,
   },
   applyMiddleware(
     thunkMiddleware,
