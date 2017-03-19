@@ -9,7 +9,7 @@ var Member = function (userName, firstName, lastName, profilePicture, frontEndPr
         this.iosProficiency = iosProficiency;
         this.systemsProficiency = systemsProficiency;
         this.gameProficiency = gameProficiency;
-        
+
     this.setProficiency = function (frontEnd, backEnd, systems, ios, android, game) {
         this.frontEnd = frontEnd;
         this.backEnd = backEnd;
@@ -21,10 +21,10 @@ var Member = function (userName, firstName, lastName, profilePicture, frontEndPr
 }
 
 $(document).ready(function () {
-    var profileOne = {"userName": "userOne", 
+    var profileOne = {"userName": "userOne",
                       "firstName": "Guy",
                       "lastName": "Buddy",
-                      "profilePicture": "https://www.google.com", 
+                      "profilePicture": "https://www.google.com",
                       "filesCommittedTo": [
                           {"fileName": "one.cpp", "linesAdded": 100, "linesRemoved": 4},
                           {"fileName": "two.js", "linesAdded": 32, "linesRemoved": 7},
@@ -69,7 +69,7 @@ $(document).ready(function () {
                     // Game
                 case 'unity':
                 case 'fbx':
-                    return 6;                    
+                    return 6;
                 default:
                     break;
                 }
@@ -82,7 +82,7 @@ $(document).ready(function () {
                 currentFile = filesCommittedTo[i];
                 fileType = findFileType(currentFile.fileName);
                 linesCommitted = currentFile.linesAdded + currentFile.linesRemoved;
-                
+
                 // Add 1 for each type of file committed to
                 // Add 1 for each 100 lines committed
                 if (fileType === 1) {
@@ -99,7 +99,7 @@ $(document).ready(function () {
                     game += linesCommitted;
                 } else {
                     // paid option
-                }                
+                }
             }
             member.setProficiency(frontEnd, backEnd, systems, ios, android, game);
         };
