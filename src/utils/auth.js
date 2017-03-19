@@ -26,8 +26,6 @@ export default class AuthService {
       localStorage.setItem('profile', JSON.stringify(profile))
     })
 
-    api('https://api.github.com/')
-
     // Saves the user token
     this.setToken('id_token', authResult.idToken)
     this.setToken('access_token', authResult.accessToken)
