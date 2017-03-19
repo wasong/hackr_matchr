@@ -8,7 +8,7 @@ h2 {
 }
 
 .Content {
-  margin-top: 20px;
+  margin-top: 4px;
 }
 
 .Side-space {
@@ -51,5 +51,7 @@ h2 {
 }
 .Featured-project {
   height: 300px;
-  flex-grow: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
