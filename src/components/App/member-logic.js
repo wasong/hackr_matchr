@@ -12,12 +12,12 @@ var Member = function (userName, firstName, lastName, profilePicture, frontEndPr
         this.gameProficiency = gameProficiency;
 
     this.setProficiency = function (frontEnd, backEnd, systems, ios, android, game) {
-        this.frontEndProficiency = frontEnd;
-        this.backEndProficiency = backEnd;
-        this.systemsProficiency = systems;
-        this.iosProficiency = ios;
-        this.androidProficiency = android;
-        this.gameProficiency = game;
+        this.['Front end web'] = frontEnd;
+        this.['Back end web'] = backEnd;
+        this.['Systems'] = systems;
+        this.['IOS'] = ios;
+        this.['Android'] = android;
+        this.['Games'] = game;
     };
 }
 
