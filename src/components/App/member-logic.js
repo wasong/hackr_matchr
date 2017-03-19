@@ -1,3 +1,4 @@
+// Member class
 var Member = function (userName, firstName, lastName, profilePicture, frontEndProficiency, backEndProficiency, androidProficiency, iosProficiency, systemsProficiency, gameProficiency) {
         this.userName = userName;
         this.firstName = firstName;
@@ -11,16 +12,18 @@ var Member = function (userName, firstName, lastName, profilePicture, frontEndPr
         this.gameProficiency = gameProficiency;
         
     this.setProficiency = function (frontEnd, backEnd, systems, ios, android, game) {
-        this.frontEnd = frontEnd;
-        this.backEnd = backEnd;
-        this.systems = systems;
-        this.ios = ios;
-        this.android = android;
-        this.game = game;
+        this.frontEndProficiency = frontEnd;
+        this.backEndProficiency = backEnd;
+        this.systemsProficiency = systems;
+        this.iosProficiency = ios;
+        this.androidProficiency = android;
+        this.gameProficiency = game;
     };
 }
 
 $(document).ready(function () {
+    
+    // Example profile
     var profileOne = {"userName": "userOne", 
                       "firstName": "Guy",
                       "lastName": "Buddy",
@@ -38,7 +41,6 @@ $(document).ready(function () {
                      },
         findFileType = function (file) {
             var extension = file.substr(file.lastIndexOf('.') + 1);
-            console.log(extension);
             switch (extension.toLowerCase()) {
                     // Front-End
                 case 'html':
@@ -83,8 +85,7 @@ $(document).ready(function () {
                 fileType = findFileType(currentFile.fileName);
                 linesCommitted = currentFile.linesAdded + currentFile.linesRemoved;
                 
-                // Add 1 for each type of file committed to
-                // Add 1 for each 100 lines committed
+                // Add number of lines committed to corresponding skill
                 if (fileType === 1) {
                     frontEnd += linesCommitted;
                 } else if (fileType === 2) {
@@ -102,5 +103,6 @@ $(document).ready(function () {
                 }                
             }
             member.setProficiency(frontEnd, backEnd, systems, ios, android, game);
+            return member;
         };
 });
