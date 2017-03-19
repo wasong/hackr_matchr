@@ -12,6 +12,7 @@ class MemberLogic extends Component {
       <Dashboard
         auth={this.props.route.auth}
         data={this.props.profile}
+        query={this.props.data}
       />
     )
   }

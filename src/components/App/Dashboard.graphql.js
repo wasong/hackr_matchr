@@ -6,10 +6,10 @@ import Dashboard from './Dashboard.redux'
 const getProjects = gql`
     query {
       allProjects {
-        id
-        availableSpots
-        members
         name
+        description
+        availableSpots
+        avatarUrl
       }
     }
 `
