@@ -1,5 +1,7 @@
 # Create-react-app boilerplate
 
+***Awarded POPULAR VOTE at NWHacks 2017***
+
 **Instructions to start**
 
 `npm install`
